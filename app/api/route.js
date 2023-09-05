@@ -1,13 +1,13 @@
 import {NextResponse} from 'next/server'
-import {getFirestore, collection, addDoc} from "firebase/firestore";
-import app from "../../firebase";
+import {getFirestore, collection, addDoc, doc, getDoc} from "firebase/firestore";
+import app from "../../firebase/config";
 
 const firestore = getFirestore(app);
 
 export async function POST(req) {
     const data = await req.json()
     try {
-        const docRef = await addDoc(collection(firestore, "responses"), data);
+        const docRef = await addDoc(collection(firestore, "users"), data);
         return NextResponse.json({
             id: docRef.id,
             ...data
@@ -20,12 +20,11 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-    const data = await req.json()
+    let docRef = doc(firestore, "transactions", "1");
+    let document = await getDoc(docRef);
     try {
-        const docRef = await a
         return NextResponse.json({
-            id: docRef.id,
-            ...data
+            docRef : document.data()
         })
     } catch (error) {
         return NextResponse.json({
